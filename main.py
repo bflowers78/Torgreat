@@ -20,22 +20,27 @@ def number(num):
         return f'{num} контрактов'
 
 
-driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+options_chrome = webdriver.ChromeOptions()
+options_chrome.add_argument('--headless')
+driver = webdriver.Chrome(options=options_chrome, service=ChromeService(ChromeDriverManager().install()))
 write_list = []
 print("hello")
 time.sleep(2)
 with open('INN.txt', 'r', encoding='utf-8') as file:
     inn_list = file.read().split()
     print('Сбор всех инн из файла')
-with open(f'{input("Введите имя файла, с которым будет вестись сравнение:")}.json', 'r', encoding='utf-8') as file:
-    students = json.load(file)
+try:
+    with open(f'{input("Введите имя файла, с которым будет вестись сравнение:")}.json', 'r', encoding='utf-8') as file:
+        students = json.load(file)
+except FileNotFoundError:
+    print('Файл не найден')
+    time.sleep(5)
 
-
-with webdriver.Chrome() as browser:
+with webdriver.Chrome(options=options_chrome) as browser:
     browser.get('https://torgeat.ru/eatpost/')
     pages = browser.find_element(By.CLASS_NAME, "pgs").find_elements(By.TAG_NAME, 'a')
     last_page = int(pages[-2].text)
-    for i in range(1, last_page):
+    for i in range(1, 300):
         print(f'page {i} / {last_page} ')
         browser.get(f'https://torgeat.ru/eatpost/?page={i}')
         suppliers = browser.find_element(By.TAG_NAME, "tbody").find_elements(By.TAG_NAME, 'tr')
