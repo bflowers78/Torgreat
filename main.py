@@ -50,8 +50,8 @@ with webdriver.Chrome(options=options_chrome) as browser:
                 name = ' '.join(supp.find_elements(By.TAG_NAME, 'td')[1].text.split()[1:])
                 numb_mono = int(supp.find_elements(By.TAG_NAME, 'td')[2].text.split()[0])
                 summ = int(supp.find_elements(By.TAG_NAME, 'td')[3].text.replace(' ', ''))
-            except Exception:
-                print('ОШИБКА: Пустые поля')
+            except Exception as err:
+                print(err)
                 continue
             if inn in inn_list:
                 if inn in students:
